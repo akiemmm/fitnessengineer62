@@ -1,0 +1,224 @@
+<script>
+  const baseFontColor = "#444";
+  const baseBGColor = "#f1f1f1";
+  const navColor = "#1f4c96";
+  const fakeImgColor = "#aaa";
+  const fontWhiteColor = "#fff";
+  const footerColor = "#23ac38";
+	const dB = "display: block;";
+  const fL = "float:left;";
+  const tAC = "text-align: center;";
+	const p20 = "padding: 20px;";
+		const config = {
+			title: "Fitness Engineerブログ",
+			description: "フィットネスを習慣にしてデスクワーカーを健康にする！",
+			style: `
+			* {
+        box-sizing: border-box;
+        color: ${baseFontColor};
+      }
+      body {
+        font-family: Arial;
+        background: ${baseBGColor};
+      }
+      .header {
+        padding: 30px;
+        ${tAC}
+        background: white;
+      }
+      .header h1 {
+        font-size: 40px;
+      }
+      .menu {
+        overflow: hidden;
+        background-color: ${navColor};
+      }
+      .menu a {
+        ${fL}
+				${dB}
+				color: #f2f2f2;
+        ${tAC}
+        padding: 14px 16px;
+        text-decoration: none;
+      }
+      .menu a:hover {
+        background-color: #ddd;
+        color: black;
+      }
+      .left-content {
+        ${fL}
+          width: 75%;
+      }
+      .card {
+        background-color: white;
+				${p20}
+        margin-top: 20px;
+      }
+      .fakeimg {
+        background-color: ${fakeImgColor};
+        width: 100%;
+				${p20}
+      }
+      .right-content {
+        ${fL}
+        width: 25%;
+        background-color: ${baseBGColor};
+        padding-left: 20px;
+      }
+      .bottom-space {
+        margin-bottom: 10px;
+      }
+      .footer {
+				${p20}
+        ${tAC}
+        background: ${footerColor};
+        margin-top: 20px;
+      }
+      .footer h2 {
+        color: ${fontWhiteColor};
+      }
+      .contents:after {
+        content: "";
+				${dB}
+        clear: both;
+      }
+      /* ＊ 以下の、CSSを追加する */
+      @media screen and (max-width: 800px) {
+        .left-content,
+        .right-content {
+          width: 100%;
+          padding: 0;
+        }
+      }`
+		}
+		const createChildTag = (tag1, text, parent) => {
+			let child = document.createElement(tag1);
+			child.innerText = text;
+			parent.appendChild(child);
+		};
+		const createChildClassTag = (tag1, text, className, parent) => {
+			let child = document.createElement(tag1);
+			child.innerText = text;
+			child.className = className;
+			parent.appendChild(child);
+		};
+		const createATag = (text, href, parent) => {
+			let a = document.createElement('a');
+			a.innerText = text;
+			a.setAttribute('href', href);
+			parent.appendChild(a);
+		};
+		const createFakeImg = (className, heightPx, text, parent) =>{
+			const element = document.createElement('div');
+			element.className = className;
+			element.style.height= heightPx;
+			element.innerText= text;
+			parent.appendChild(element);
+		}
+		window.addEventListener('load', () => {		
+			createChildTag ('style', config.style, document.head);
+			createChildClassTag ('div', '', 'header', document.body);
+			const header = document.querySelector('.header');
+			createChildTag('h1', "Fitness Engineerブログ", header);
+			createChildTag('p', "フィットネスを習慣にしてデスクワーカーを健康にする！", header);
+			createChildClassTag ('div', '', 'menu', document.body);
+			//menu
+			const menu = document.querySelector('.menu');
+			const a = document.getElementsByTagName('a');
+			const menuList = ['健康', '運動', '肩こり','検索'];
+			for (let i = 0; i<menuList.length; i++){
+				createATag(menuList[i], '#', menu);
+				if(menuList[i] == '検索'){
+					a[i].style.float =  'right';
+				}
+			}
+    	//contents
+			const contentsClassName = ['contents', 'left-content',	'right-content'];
+			//左と右のカードの数をカウント
+			const leftCardsCount = 2;	
+			const rightCardsCount = 3;
+			for (let i = 0; i<contentsClassName.length; i++){
+				const div = document.createElement('div');
+				//配列で取得した名前をそのままクラス名に使用。
+				div.className = contentsClassName[i];
+				//content、leftContent、rightContentクラスを定義
+				const contents = document.querySelector('div.contents');
+				const leftContent = document.querySelector('div.left-content');
+				const rightContent = document.querySelector('div.right-content');
+				const fakeImg = document.querySelector('.fakeimg');
+				if (contentsClassName[i] == 'contents'){
+					//contentsだった場合はdivにbody直下にそのまま入れるだけ
+					document.body.appendChild(div);
+				} else {
+					//他のクラスだった場合、contentsクラスの子要素にする。
+					contents.appendChild(div);
+					//もし左側にコンテンツを入れる場合
+					if(contentsClassName[i] == 'left-content'){
+						for(let j = 0; j<leftCardsCount; j++){
+							createChildClassTag('div', '', 'card', div);
+							const cardsTag = ['h2', 'h5', 'div', 'p', 'p'];
+							const leftCardClass = document.querySelectorAll('.left-content .card');
+							for (let k = 0; k< cardsTag.length; k++){
+								if(cardsTag[k] === 'div'){
+									createFakeImg('fakeimg', '300px', '画像', leftCardClass[j]); 
+								}else{
+									let elements = document.createElement(cardsTag[k]);
+									if(k === 3){
+										elements.innerText='内容';
+									} else if (k === 4){
+										elements.innerText='テキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテ';
+									}
+									leftCardClass[j].appendChild(elements);
+								}
+							}
+							if(j == 0) {
+								const h2 = document.querySelectorAll('.left-content .card h2');
+								const h5 = document.querySelectorAll('.left-content .card h5');
+								h2[j].innerText='オフィスワーカーが肩こりを解消するための方法教えます。';
+								h5[j].innerText='2021/1/23';
+							}else {
+								const h2 = document.querySelectorAll('.left-content .card h2');
+								const h5 = document.querySelectorAll('.left-content .card h5');
+								h2[j].innerText='コロナ太りを解消する筋トレ３選';
+								h5[j].innerText='2021/1/14';
+							}
+						}
+						//もし右側にコンテンツを入れる場合
+					} else {
+						for(let j = 0; j<rightCardsCount; j++){
+							createChildClassTag('div', '', 'card', div);
+							const cardClass = document.querySelectorAll('.right-content .card');
+							if(j == 0) {
+								const p = document.createElement('p');
+								createChildTag('h2', '運営者情報', cardClass[j]);
+								createFakeImg('fakeimg', '100px', '画像', cardClass[j]);
+								p.innerText='NPO法人フィットネス・エンジニアが本ブログを運営しています。';
+								cardClass[j].appendChild(p);
+								}else{
+									const h3 = document.createElement('h3');
+									cardClass[j].appendChild(h3);
+									if(j == 1 ){
+										let fakeImgCount = 3;
+										createChildTag ('h3', '人気の投稿', cardClass[j]);
+										for (let k= 0; k < fakeImgCount; k++){ 
+											const p = document.createElement('p');
+											createFakeImg('fakeimg bottom-space', '', '', cardClass[j]);
+											const fakeImgBottomSpace = document.querySelectorAll('.right-content .card .fakeImg.bottom-space');
+											p.innerText = '画像';
+											fakeImgBottomSpace[k].appendChild(p);
+										};
+									} else {
+									createChildTag ('h3', 'SNSもどうぞ！', cardClass[j]); 
+									createChildTag ('p', 'テキスト...', cardClass[j]);
+								}
+							}
+            }
+					}
+				}
+			}
+		//footer
+		createChildClassTag('div', '', 'footer', document.body);
+		const footer = document.querySelector('.footer');
+		createChildTag('h2', 'フッター', footer);
+  });
+</script>
