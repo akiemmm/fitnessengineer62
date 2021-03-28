@@ -1,0 +1,138 @@
+<script>
+  // 以下の３つの課題に取り組むと、ほぼ自作のフレームワークが完成するので、興味があればぜひやってみてください。
+  const config = {
+    title: "Fitness Engineerブログ",
+    description: "フィットネスを習慣にしてデスクワーカーを健康にする！",
+    menus: ["健康","運動","肩こり","検索"],
+    // Q1.この中にコンテンツの設定を記載して見ましょう。
+		//オブジェクトを持った配列ということで、キー名をタグ、テキストを値としましたが、キー名は一度しか取得できないという問題にあたっております。また、オブジェクトをもった配列の取得の仕方がわからないでいます。
+		/*leftContents : [{'h2':"オフィスワーカーが肩こりを解消するための方法教えます。",'h5':"2021/1/23", 'div':"", 'p':"内容", 'p':"テキストテキストテキストテキストテキストテキストテキストテキストテキストテキスト"},
+		{'h2':"オフィスワーカーが肩こりを解消するための方法教えます。",'h5':"2021/1/23", 'div':"", 'p':"内容", 'p':'テキストテキストテキストテキストテキストテキストテキストテキストテキストテキスト'}],
+    rightContents: [{'h2':"運営者情報",'div':""},
+		{'h3':"人気の投稿", 'div':"", 'div':"", 'div':"",},
+		{'h3':"SNSもどうぞ！", 'p':"テキスト..."}],*/
+
+		/*配列としてではなく、オブジェクトのみだとある程度はできましたが、pが1度しか発生しない（キー名は一度しか取得できない）という問題があります*/
+		leftContents : {'h2':"オフィスワーカーが肩こりを解消するための方法教えます。",'h5':"2021/1/23", 'div':"", 'p':"内容", 'p':"テキストテキストテキストテキストテキストテキストテキストテキストテキストテキスト"},
+		rightContents : {'h2':"運営者情報",'div':""},
+    style: `
+      * {
+        box-sizing: border-box;
+        color: #444;
+      }
+      body {
+        font-family: Arial;
+        background: #f1f1f1;
+      }
+      .header {
+        padding: 30px;
+        text-align: center;
+        background: white;
+      }
+      .header h1 {
+        font-size: 40px;
+      }
+      .menu {
+        overflow: hidden;
+        background-color: #1f4c96;
+      }
+      .menu a {
+        float: left;
+        display: block;
+        color: #f2f2f2;
+        text-align: center;
+        padding: 14px 16px;
+        text-decoration: none;
+      }
+      .menu a:hover {
+        background-color: #ddd;
+        color: black;
+      }
+      .left-content {
+        float: left;
+        width: 75%;
+      }
+      .card {
+        background-color: white;
+        padding: 20px;
+        margin-top: 20px;
+      }
+      .fakeimg {
+        background-color: #aaa;
+        width: 100%;
+        padding: 20px;
+      }
+      .right-content {
+        float: left;
+        width: 25%;
+        background-color: #f1f1f1;
+        padding-left: 20px;
+      }
+      .bottom-space {
+        margin-bottom: 10px;
+      }
+      .footer {
+        padding: 20px;
+        text-align: center;
+        background: #23ac38;
+        margin-top: 20px;
+      }
+      .footer h2 {
+        color: #fff;
+      }
+      .contents:after {
+        content: "";
+        display: block;
+        clear: both;
+      }
+      @media screen and (max-width: 800px) {
+        .left-content,
+        .right-content {
+          width: 100%;
+          padding: 0;
+        }
+      }
+    `
+  }
+  const createChildTag = (parent,tag,text,options) => {
+    const element = document.createElement(tag);
+    if (options) Object.keys(options).map(key => element[key] = options[key]);
+    element.innerText = text;
+    parent.appendChild(element);
+    return element;
+  }
+  window.addEventListener('load', () => {
+    createChildTag(document.head,'style',config.style)
+    // header
+    let header = createChildTag(document.body,'div',"",{className:"header"});
+    createChildTag(header,'h1',config.title);
+    createChildTag(header,'p',config.description);
+    // menu
+    let menu = createChildTag(document.body,'div',"",{className:"menu"});
+    config.menus.map((menuItem,index) => (config.menus.length - 1 === index) ? createChildTag(menu,'a',menuItem, {style:"float: right"}) : createChildTag(menu,'a',menuItem));
+    // contetns
+    let contents = createChildTag(document.body,'div',"",{className:"contents"});
+    let left = createChildTag(contents,'div',"",{className:"left-content"});
+
+		// Q2.何度も登場している部分をmap関数を使ってコードを短くしてみましょう！
+    let leftCard1 = createChildTag(left,'div',"",{className:"card"});
+		//オブジェクトのみのconfig.leftContentsの方ならある程度できましたが、pタグが2回読み込む方法がわからなかったりします。
+		Object.keys(config.leftContents).map((key => config.leftContents[key] =
+    (key === 'div') ?
+    createChildTag(leftCard1, key, config.leftContents[key], {className:"fakeimg", style: "height: 300px"}):
+		createChildTag(leftCard1, key, config.leftContents[key])));
+
+		let right = createChildTag(contents,'div',"",{className:"right-content"});
+    // Q3.以下の３つも同様にconfigのrightContentsから取り出してmapでループ処理を記述してみましょう。
+    let rightCard1 = createChildTag(right,'div',"",{className:"card"});
+		Object.keys(config.rightContents).map((key => config.rightContents[key] =
+    (key === 'div') ?
+    createChildTag(rightCard1, key, config.rightContents[key], {className:"fakeimg", style: "height: 100px"}):
+		createChildTag(rightCard1, key, config.rightContents[key])));
+
+    // footer
+    let footer = createChildTag(document.body,'div',"",{className:"footer"});
+    createChildTag(footer,'h2',"フッター");
+
+});
+</script>
